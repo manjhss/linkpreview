@@ -67,8 +67,8 @@ export function UrlInput({
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
-            placeholder=""
-            className="flex-1 border-0 bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 h-auto text-base rounded-none placeholder:text-foreground/40"
+            placeholder="enter a url"
+            className="flex-1 border-0 bg-background dark:bg-background shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 h-auto text-base rounded-none placeholder:text-foreground/40"
             disabled={loading}
             autoComplete="off"
             autoCorrect="off"

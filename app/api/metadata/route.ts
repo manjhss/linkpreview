@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   try {
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; LinkPreview/1.0; +https://github.com/KartikLabhshetwar/linkpreview)",
+        "User-Agent": "Mozilla/5.0 (compatible; LinkPreview/1.0; +https://linkpreview.kartikk.tech)",
       },
     })
 

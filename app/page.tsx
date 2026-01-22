@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useState, useEffect, useRef } from "react"
+import Image from "next/image"
 import { SettingsProvider } from "@/context/settings-context"
 import { useMetadata } from "@/hooks/use-metadata"
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts"
@@ -23,12 +24,14 @@ import {
   RawMetadata,
 } from "@/components/metadata-tabs"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Loader2, AlertCircle, ChevronUp, Copy, X, Check } from "lucide-react"
+import { AlertCircle, Copy, X, Check, ChevronDown } from "lucide-react"
+import { FaXTwitter } from "react-icons/fa6"
+import { GitHubStars } from "@/components/github-stars"
 import { Button } from "@/components/ui/button"
 import { formatUrl } from "@/lib/cache"
 import { cn, copyToClipboard, getRecentUrls, addRecentUrl, clearRecentUrls, getUrlHostname } from "@/lib/utils"
 
-const EXAMPLE_URLS = ["minimax.io", "bettershot.site", "opencode.ai"]
+const EXAMPLE_URLS = ["minimax.io", "bettershot.site", "scira.ai"]
 
 function LinkPreviewContent() {
   const {
@@ -43,7 +46,7 @@ function LinkPreviewContent() {
   } = useMetadata()
 
   const [localError, setLocalError] = useState<string>("")
-  const [localhostExpanded, setLocalhostExpanded] = useState(false)
+  const [localhostExpanded, setLocalhostExpanded] = useState(true)
   const [copiedInstall, setCopiedInstall] = useState(false)
   const [copiedTunnel, setCopiedTunnel] = useState(false)
   const [recentUrls, setRecentUrls] = useState<string[]>(() => {
@@ -52,6 +55,7 @@ function LinkPreviewContent() {
     }
     return []
   })
+  const [githubStars, setGithubStars] = useState<number>(0)
   const lastAddedUrlRef = useRef<string>("")
 
   const handleSubmit = useCallback(
@@ -63,7 +67,7 @@ function LinkPreviewContent() {
   )
 
   const handleCopyInstall = useCallback(async () => {
-    const success = await copyToClipboard("bun add -g cloudflared")
+    const success = await copyToClipboard("bun add -g ngrok")
     if (success) {
       setCopiedInstall(true)
       setTimeout(() => setCopiedInstall(false), 2000)
@@ -71,7 +75,7 @@ function LinkPreviewContent() {
   }, [])
 
   const handleCopyTunnel = useCallback(async () => {
-    const success = await copyToClipboard("cloudflared tunnel --url http://localhost:3000")
+    const success = await copyToClipboard("ngrok http 3000")
     if (success) {
       setCopiedTunnel(true)
       setTimeout(() => setCopiedTunnel(false), 2000)
@@ -87,6 +91,21 @@ function LinkPreviewContent() {
       })
     }
   }, [metadata, url, loading])
+
+  useEffect(() => {
+    const fetchGitHubStars = async () => {
+      try {
+        const response = await fetch("https://api.github.com/repos/KartikLabhshetwar/linkpreview")
+        if (response.ok) {
+          const data = await response.json()
+          setGithubStars(data.stargazers_count || 0)
+        }
+      } catch {
+        setGithubStars(0)
+      }
+    }
+    fetchGitHubStars()
+  }, [])
 
   const handleClearRecent = useCallback(() => {
     clearRecentUrls()
@@ -122,40 +141,50 @@ function LinkPreviewContent() {
   })
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="container mx-auto px-4 py-12 max-w-2xl">
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="w-full bg-background">
+        <div className="container mx-auto px-4 py-4 max-w-2xl flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Image src="/icon.svg" alt="Link Preview" width={56} height={56} />
+          </div>
+          <div className="flex items-center gap-3">
+            <button className="text-foreground/70 hover:text-foreground transition-colors">
+              <GitHubStars repo="KartikLabhshetwar/linkpreview" stargazersCount={githubStars} />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-12 max-w-2xl flex-1">
         <div className="space-y-8">
           <div className="space-y-3">
-            <h1 className="text-6xl font-serif italic text-foreground" style={{ fontFamily: 'var(--font-serif)' }}>Link Preview</h1>
-            <p className="text-lg text-foreground/80">
-              Inspect how your links appear on social platforms.
+            <h1 className="text-3xl font-serif italic text-foreground" style={{ fontFamily: 'var(--font-serif)' }}>linkpreview</h1>
+            <p className="text-md text-foreground/80">
+              See how your links appear on social platforms.
             </p>
           </div>
 
           <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm text-foreground/70">Enter URL</label>
-              <UrlInput
-                url={url}
-                setUrl={setUrl}
-                onSubmit={handleSubmit}
-                loading={loading}
-                error={localError || error}
-                onClear={clear}
-                onRefresh={refresh}
-              />
-            </div>
+            <UrlInput
+              url={url}
+              setUrl={setUrl}
+              onSubmit={handleSubmit}
+              loading={loading}
+              error={localError || error}
+              onClear={clear}
+              onRefresh={refresh}
+            />
 
             {!metadata && !loading && !error && !localError && (
               <div className="space-y-4">
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <p className="text-sm uppercase tracking-wide text-foreground/70">TRY THESE</p>
-                  <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-wrap gap-6">
                     {EXAMPLE_URLS.map((exampleUrl) => (
                       <button
                         key={exampleUrl}
                         onClick={() => handleExampleClick(exampleUrl)}
-                        className="flex items-center gap-1 text-foreground hover:text-foreground/70 transition-colors"
+                        className="flex items-center gap-2 text-foreground hover:text-foreground/70 transition-colors"
                       >
                         <span>›</span>
                         <span>{exampleUrl}</span>
@@ -170,24 +199,24 @@ function LinkPreviewContent() {
                     className="flex items-center gap-2 w-full text-left"
                   >
                     <p className="text-sm uppercase tracking-wide text-foreground/70">LOCALHOST</p>
-                    <ChevronUp
+                    <ChevronDown
                       className={cn(
                         "w-4 h-4 text-foreground/70 transition-transform",
-                        localhostExpanded ? "" : "rotate-180"
+                        localhostExpanded ? "rotate-180" : ""
                       )}
                     />
                   </button>
                   {localhostExpanded && (
                     <div className="space-y-4 pt-2">
                       <p className="text-sm text-foreground/80">
-                        Test your local server using Cloudflare Tunnel
+                        Test your local server using ngrok
                       </p>
                       <div className="space-y-3">
                         <div className="space-y-1.5">
                           <div className="text-xs text-foreground/60">1. INSTALL</div>
                           <div className="flex items-center gap-2 group">
                             <code className="flex-1 bg-muted px-3 py-2 rounded text-sm font-mono text-foreground/90">
-                              bun add -g cloudflared
+                              bun add -g ngrok
                             </code>
                             <button
                               onClick={handleCopyInstall}
@@ -215,7 +244,7 @@ function LinkPreviewContent() {
                           <div className="text-xs text-foreground/60">3. RUN TUNNEL</div>
                           <div className="flex items-center gap-2 group">
                             <code className="flex-1 bg-muted px-3 py-2 rounded text-sm font-mono text-foreground/90">
-                              cloudflared tunnel --url http://localhost:3000
+                              ngrok http 3000
                             </code>
                             <button
                               onClick={handleCopyTunnel}
@@ -248,9 +277,8 @@ function LinkPreviewContent() {
           </div>
 
           {loading && (
-            <div className="flex flex-col items-center justify-center py-16">
-              <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-              <p className="text-muted-foreground">Fetching metadata...</p>
+            <div className="flex flex-col items-center justify-center min-h-[60vh] py-24">
+              <div className="loader" style={{ color: 'var(--foreground)' }} />
             </div>
           )}
 
@@ -419,7 +447,7 @@ function LinkPreviewContent() {
             </Tabs>
           )}
 
-          {recentUrls.length > 0 && (
+          {!metadata && !loading && !error && !localError && recentUrls.length > 0 && (
             <div className="space-y-2 pt-8 border-t border-border">
               <div className="flex items-center justify-between">
                 <p className="text-sm uppercase tracking-wide text-foreground/70">RECENT</p>
@@ -431,12 +459,12 @@ function LinkPreviewContent() {
                   <span>CLEAR</span>
                 </button>
               </div>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-6">
                 {recentUrls.map((recentUrl) => (
                   <button
                     key={recentUrl}
                     onClick={() => handleRecentClick(recentUrl)}
-                    className="flex items-center gap-1 text-foreground hover:text-foreground/70 transition-colors"
+                    className="flex items-center gap-2 text-foreground hover:text-foreground/70 transition-colors"
                   >
                     <span className="text-foreground/50">›</span>
                     <span>{getUrlHostname(recentUrl)}</span>
@@ -447,6 +475,22 @@ function LinkPreviewContent() {
           )}
         </div>
       </main>
+
+      <footer className="w-full bg-background mt-auto">
+        <div className="container mx-auto px-4 py-4 max-w-2xl flex items-center justify-between">
+          <span className="text-sm text-foreground/70 uppercase tracking-wide"> {new Date().getFullYear()} © linkpreview</span>
+          <div className="flex items-center gap-3">
+            <a
+              href="https://x.com/code_kartik"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground/70 hover:text-foreground transition-colors"
+            >
+              <FaXTwitter className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
