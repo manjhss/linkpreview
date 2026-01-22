@@ -53,6 +53,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${publicSans.variable} dark`}>
+      <head>
+      <script
+    src="https://cdn.databuddy.cc/databuddy.js"
+    data-client-id="bb57281e-b1e2-40c3-af33-d3f2adafe93f"
+    data-track-attributes="true"
+    data-track-outgoing-links="true"
+    data-track-interactions="true"
+    data-track-scroll-depth="true"
+    data-track-web-vitals="true"
+    crossOrigin="anonymous"
+    async
+  ></script>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} antialiased font-sans`}
       >
