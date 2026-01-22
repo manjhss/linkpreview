@@ -1,22 +1,28 @@
 # LinkPreview
 
-Test how your links appear on social media. Preview on Telegram, Discord, Slack, X, Facebook, LinkedIn, and WhatsApp with real-time metadata analysis.
+Preview how your links appear on social platforms. Test metadata across Telegram, Discord, Slack, X, Facebook, LinkedIn, and WhatsApp.
 
 ## Features
 
-- **7 Platform Previews** - Telegram, Discord, Slack, X, Facebook, LinkedIn, WhatsApp
-- **Quality Score** - Get a score (0-100) based on your metadata completeness
-- **Metadata Inspector** - View Open Graph, Twitter Cards, and basic SEO tags
-- **Keyboard Shortcuts** - `/` to focus, `Escape` to clear, `Ctrl+R` to refresh
-- **Localhost Testing** - Built-in guide for Cloudflare Tunnel setup
+- Preview links across 7 social platforms
+- Metadata quality scoring
+- Open Graph and Twitter Cards inspection
+- Localhost testing with ngrok
 
 ## Quick Start
 
 ```bash
 git clone https://github.com/KartikLabhshetwar/linkpreview
+
 cd linkpreview
+
+```
+
+```bash
+
 bun install
 bun dev
+
 ```
 
 Open http://localhost:3000
