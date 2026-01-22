@@ -299,7 +299,8 @@ function LinkPreviewContent() {
 
           {metadata && !loading && !error && !localError && (
             <Tabs defaultValue="score" className="w-full">
-              <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
+              <div className="w-full overflow-x-auto">
+                <TabsList className="inline-flex w-max min-w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
                 <TabsTrigger
                   value="score"
                   className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
@@ -343,6 +344,7 @@ function LinkPreviewContent() {
                   RAW
                 </TabsTrigger>
               </TabsList>
+              </div>
 
               <TabsContent value="score" className="mt-8">
                 <ScoreDisplay metadata={metadata} />
@@ -350,7 +352,8 @@ function LinkPreviewContent() {
 
               <TabsContent value="previews" className="mt-8">
                 <Tabs defaultValue="telegram" className="w-full">
-                  <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
+                  <div className="w-full overflow-x-auto">
+                    <TabsList className="inline-flex w-max min-w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
                     <TabsTrigger
                       value="telegram"
                       className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-3"
@@ -394,6 +397,7 @@ function LinkPreviewContent() {
                       WHATSAPP
                     </TabsTrigger>
                   </TabsList>
+                  </div>
 
                   <TabsContent value="telegram" className="mt-8">
                     <TelegramPreview metadata={metadata} url={url} />
