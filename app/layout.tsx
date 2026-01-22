@@ -38,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={publicSans.variable}>
+    <html lang="en" className={`${publicSans.variable} dark`}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} antialiased font-sans`}
       >

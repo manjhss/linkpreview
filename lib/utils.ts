@@ -53,3 +53,40 @@ export function formatTimestamp(timestamp: number): string {
   if (diffDays < 7) return `${diffDays}d ago`
   return date.toLocaleDateString()
 }
+
+const RECENT_URLS_KEY = "linkpreview_recent_urls"
+const MAX_RECENT_URLS = 10
+
+export function getRecentUrls(): string[] {
+  if (typeof window === "undefined") return []
+  try {
+    const stored = localStorage.getItem(RECENT_URLS_KEY)
+    if (!stored) return []
+    const urls = JSON.parse(stored)
+    return Array.isArray(urls) ? urls : []
+  } catch {
+    return []
+  }
+}
+
+export function addRecentUrl(url: string): void {
+  if (typeof window === "undefined" || !url) return
+  try {
+    const recent = getRecentUrls()
+    const normalized = formatUrl(url)
+    const filtered = recent.filter((u) => formatUrl(u) !== normalized)
+    const updated = [normalized, ...filtered].slice(0, MAX_RECENT_URLS)
+    localStorage.setItem(RECENT_URLS_KEY, JSON.stringify(updated))
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+export function clearRecentUrls(): void {
+  if (typeof window === "undefined") return
+  try {
+    localStorage.removeItem(RECENT_URLS_KEY)
+  } catch {
+    // Ignore localStorage errors
+  }
+}

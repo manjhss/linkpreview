@@ -43,7 +43,7 @@ export function XPreview({ metadata, url }: PreviewProps) {
       )}
       <div className="p-3 space-y-1">
         <p className="text-[#536471] text-[13px] truncate">
-          {siteName}
+          {url}
         </p>
         <p className="font-medium text-[#0f1419] dark:text-[#f7f9f9] text-[15px] line-clamp-2 leading-tight">
           {title}
@@ -53,10 +53,6 @@ export function XPreview({ metadata, url }: PreviewProps) {
             {description}
           </p>
         )}
-        <p className="text-[#536471] text-[15px]">
-          <span className="text-[#8b98a5]">Posted on </span>
-          {getUrlHostname(url)}
-        </p>
       </div>
     </div>
   )
